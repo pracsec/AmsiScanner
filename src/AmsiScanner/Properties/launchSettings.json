@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AmsiScanner": {
+      "commandName": "Project",
+      "commandLineArgs": "scan \"C:\\Users\\helpdesk\\Desktop\\Workspace\\bypass-patch-add-type.ps1\""
+    }
+  }
+}
