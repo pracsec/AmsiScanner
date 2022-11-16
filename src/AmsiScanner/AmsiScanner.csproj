@@ -5,15 +5,15 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.3.0</Version>
+    <Version>2.3.1</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/FusionCarcass/amsiscanner</RepositoryUrl>
-    <AssemblyVersion>2.3.0</AssemblyVersion>
-    <FileVersion>2.3.0</FileVersion>
+    <RepositoryUrl>https://github.com/pracsec/AmsiScanner</RepositoryUrl>
+    <AssemblyVersion>2.3.1</AssemblyVersion>
+    <FileVersion>2.3.1</FileVersion>
     <PackageLicenseFile></PackageLicenseFile>
-    <Copyright>(c) Michael Lester</Copyright>
+    <Copyright>(c) Practical Security Analytics</Copyright>
     <Description>A tool for finding AV signatures.</Description>
-    <PackageProjectUrl>https://github.com/FusionCarcass/amsiscanner</PackageProjectUrl>
+    <PackageProjectUrl>https://practicalsecurityanalytics.com/home/tools/amsiscanner/</PackageProjectUrl>
     <Company>Practical Security Analytics</Company>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>

@@ -36,6 +36,11 @@ namespace AmsiScanner.Common {
                 }
             }
 
+            //We get different results from Windows Defender when the AmsiScanBuffer call comes from
+            //the AmsiUtil class within System.Management.Automation.dll
+            Type type = typeof(PSObject).Assembly.GetType("System.Management.Automation.AmsiUtils");
+            this._scanContent = type.GetMethod("ScanContent", BindingFlags.NonPublic | BindingFlags.Static);
+
             this._cachedResults = new ConcurrentDictionary<string, AmsiResult>();
         }
 
@@ -94,10 +99,11 @@ namespace AmsiScanner.Common {
 
             //We get different results from Windows Defender when the AmsiScanBuffer call comes from
             //the AmsiUtil class within System.Management.Automation.dll
-            Type type = typeof(PSObject).Assembly.GetType("System.Management.Automation.AmsiUtils");
+            //Type type = typeof(PSObject).Assembly.GetType("System.Management.Automation.AmsiUtils");
 
             //Reset the AmsiSession field to prevent correlation between seperate scans
             if (!this._correlated) {
+                Type type = typeof(PSObject).Assembly.GetType("System.Management.Automation.AmsiUtils");
                 FieldInfo[] fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Static);
                 FieldInfo contextField = type.GetField("s_amsiContext", BindingFlags.NonPublic | BindingFlags.Static);
                 IntPtr context = (IntPtr)contextField.GetValue(null);
@@ -109,8 +115,9 @@ namespace AmsiScanner.Common {
                 }
             }
 
-            MethodInfo method = type.GetMethod("ScanContent", BindingFlags.NonPublic | BindingFlags.Static);
-            int result = (int)method.Invoke(null, new object[] { text, string.Empty });
+            //MethodInfo method = type.GetMethod("ScanContent", BindingFlags.NonPublic | BindingFlags.Static);
+            Interlocked.Increment(ref this._amsiCalls);
+            int result = (int)this._scanContent.Invoke(null, new object[] { text, string.Empty });
 
             amsiResult = AmsiSession.IntToAmsiResult(result);
 
@@ -136,7 +143,7 @@ namespace AmsiScanner.Common {
                 IntPtr buffer = new IntPtr((void*)chPtr);
                 resultCode = NativeMethods.AmsiScanBuffer(this._context, buffer, (uint)(text.Length * 2), meta, this._session, out amsiResult);
             }
-            //int resultCode = NativeMethods.AmsiScanString(this._context, text, meta, this._session, out amsiResult);
+
             if (resultCode != 0) {
                 throw new Exception(string.Format("Call to AmsiScanString failed with return code {0}.", resultCode));
             }
@@ -190,6 +197,7 @@ namespace AmsiScanner.Common {
         private readonly bool _cache;
         private readonly bool _correlated;
         private long _amsiCalls = 0;
+        private MethodInfo _scanContent;
 
         private const string ESCAPE_STUB = "if($escape) { return; }\r\n";
         private const string MALICIOUS_CONTENT = "script contains malicious content";

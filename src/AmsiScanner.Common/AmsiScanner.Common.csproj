@@ -5,16 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>2.3.0</Version>
-    <Authors>FusionCarcass</Authors>
+    <Version>2.3.1</Version>
+    <Authors>pracsec</Authors>
     <Company>Practical Security Analytics</Company>
     <Description>A library for interacting with the Anti-Malware Scan Interface for security and penetration testing purposes.</Description>
-    <Copyright>(c) Michael Lester</Copyright>
-    <PackageProjectUrl>https://github.com/FusionCarcass/amsiscanner</PackageProjectUrl>
+    <Copyright>(c) Practical Security Analytics</Copyright>
+    <PackageProjectUrl>https://practicalsecurityanalytics.com/home/tools/amsiscanner/</PackageProjectUrl>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/FusionCarcass/amsiscanner</RepositoryUrl>
+    <RepositoryUrl>https://github.com/pracsec/AmsiScanner</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

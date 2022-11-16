@@ -1,11 +1,9 @@
 ﻿using AmsiScanner.Common;
 using AmsiScanner.Common.Indexing;
 using AmsiScanner.Common.Threading;
-using System;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.Diagnostics;
-using System.IO;
 
 namespace AmsiScanner {
     public class Program {

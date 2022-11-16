@@ -14,6 +14,12 @@ Scan files with the Anti-Malware Scan Interface (AMSI) and minimize malicious te
 - Windows 10+
 - .NET 6.0
 
+# Project Url
+
+Please see the site below for more examples and documentation.
+
+https://practicalsecurityanalytics.com/home/tools/amsiscanner/
+
 # AmsiScanner.Common Usage
 
 ## Scan a File
