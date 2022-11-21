@@ -5,11 +5,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.3.1</Version>
+    <Version>2.3.2</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/pracsec/AmsiScanner</RepositoryUrl>
-    <AssemblyVersion>2.3.1</AssemblyVersion>
-    <FileVersion>2.3.1</FileVersion>
+    <AssemblyVersion>2.3.2</AssemblyVersion>
+    <FileVersion>2.3.2</FileVersion>
     <PackageLicenseFile></PackageLicenseFile>
     <Copyright>(c) Practical Security Analytics</Copyright>
     <Description>A tool for finding AV signatures.</Description>

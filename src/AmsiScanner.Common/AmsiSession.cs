@@ -12,14 +12,27 @@ using System.Threading.Tasks;
 
 namespace AmsiScanner.Common {
     public class AmsiSession : IDisposable {
+        /// <summary>
+        /// The number of calls to AMSI made during the session. This can be used to evaluate the performance of various algorithms. The less number of calls, the beter.
+        /// </summary>
         public long AmsiCallCount {
             get {
                 return Interlocked.Read(ref this._amsiCalls);
             }
         }
 
+        /// <summary>
+        /// AmsiSession contains native references used for executing scans of files, strings, and other data using the Anitmalware Scan Interface.
+        /// </summary>
         public AmsiSession() : this(string.Format("{0}_{1}_{2}", "PowerShell", Utility.PowerShellPath, Utility.PowerShellVersion.ProductVersion)) { }
 
+        /// <summary>
+        /// AmsiSession contains native references used for executing scans of files, strings, and other data using the Anitmalware Scan Interface.
+        /// </summary>
+        /// <param name="application">A description of the application.</param>
+        /// <param name="correlated">True if signatures should be applied to all data submitted or just the current data.</param>
+        /// <param name="cache">True if results should be cached to reduce duplicate calls to AMSI. This can improve performance.</param>
+        /// <exception cref="Exception">An exception will be thrown if AMSI cannot be initialized.</exception>
         public AmsiSession(string application, bool correlated = false, bool cache = true) {
             this._cache = cache;
             this._correlated = correlated;
@@ -44,6 +57,11 @@ namespace AmsiScanner.Common {
             this._cachedResults = new ConcurrentDictionary<string, AmsiResult>();
         }
 
+        /// <summary>
+        /// Scans the specified file and tries to determine heuristically if the file contains text. If it contains text, then it attempts to convert to UTF-16LE prior to scanning with AmsiScanBuffer.
+        /// </summary>
+        /// <param name="path">The file to scan.</param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
         public AmsiResult ScanFile(FileInfo path) {
             byte[] contents = Utility.ReadAllBytes(path.FullName);
             string text;
@@ -54,16 +72,31 @@ namespace AmsiScanner.Common {
             }
         }
 
+        /// <summary>
+        /// Scans the specified file using the AmsiScanBuffer method. This method assumes that the data is text and attempts to convert it to UTF-16LE encoding prior to scanning. Many AVs assume text data coming in is UTF-16LE as that is the default encoding for strings stored in memory within .NET.
+        /// </summary>
+        /// <param name="path">The file to scan.</param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
         public AmsiResult ScanTextFile(FileInfo path) {
             string script = Utility.ReadAllText(path.FullName);
             return this.ScanString(script);
         }
 
+        /// <summary>
+        /// Scans the specified file using the AmsiScanBuffer method. This method assumes the file is binary data and does not try to interpret it as text.
+        /// </summary>
+        /// <param name="path">The file to scan.</param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
         public AmsiResult ScanBinaryFile(FileInfo path) {
             byte[] data = Utility.ReadAllBytes(path.FullName);
             return this.ScanData(data);
         }
 
+        /// <summary>
+        /// Scans a PowerShell script by attempting to execute it. Actual execution is prevented by inserting a small exit function at the beginning of the script.
+        /// </summary>
+        /// <param name="text">The script to scan.</param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
         public AmsiResult ScanPowerShellScript(string text) {
             AmsiResult result = AmsiResult.NotDetected;
             if (this._cache && this._cachedResults.TryGetValue(text, out result)) {
@@ -91,6 +124,11 @@ namespace AmsiScanner.Common {
             return result;
         }
 
+        /// <summary>
+        /// This method reflectively calls the System.Management.Automation.AmsiUtils.ScanContent method because it gives different results with Windows Defender than calling AmsiScanBuffer directly.
+        /// </summary>
+        /// <param name="text">The text to scan.</param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
         public AmsiResult ScanStringReflective(string text) {
             AmsiResult amsiResult = AmsiResult.NotDetected;
             if (this._cache && this._cachedResults.TryGetValue(text, out amsiResult)) {
@@ -128,6 +166,12 @@ namespace AmsiScanner.Common {
             return amsiResult;
         }
 
+        /// <summary>
+        /// Scans the provided text using AmsiScanBuffer. The text is passed in with UTF-16LE encoding.
+        /// </summary>
+        /// <param name="text">The text to scan.</param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
+        /// <exception cref="Exception"></exception>
         public unsafe AmsiResult ScanString(string text) {
             AmsiResult result = AmsiResult.NotDetected;
             if (this._cache && this._cachedResults.TryGetValue(text, out result)) {
@@ -157,6 +201,12 @@ namespace AmsiScanner.Common {
             return result;
         }
 
+        /// <summary>
+        /// Scans the provided data using AmsiScanBuffer.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>Returns an AmsiResult enumeration (https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result).</returns>
+        /// <exception cref="Exception"></exception>
         public AmsiResult ScanData(Byte[] data) {
             string str = Guid.NewGuid().ToString();
             Interlocked.Increment(ref this._amsiCalls);

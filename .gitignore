@@ -5,6 +5,7 @@
 
 # Custom
 release.zip
+*.zip
 
 # User-specific files
 *.rsuser

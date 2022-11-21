@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>2.3.1</Version>
+    <Version>2.3.2</Version>
     <Authors>pracsec</Authors>
     <Company>Practical Security Analytics</Company>
     <Description>A library for interacting with the Anti-Malware Scan Interface for security and penetration testing purposes.</Description>
@@ -17,6 +17,8 @@
     <RepositoryUrl>https://github.com/pracsec/AmsiScanner</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyVersion>2.3.2</AssemblyVersion>
+    <FileVersion>2.3.2</FileVersion>
   </PropertyGroup>
   
   <ItemGroup>
